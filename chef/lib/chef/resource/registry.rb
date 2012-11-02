@@ -35,7 +35,7 @@ class Chef
         @backup = 5
         @action = :modify
         @key_name = name
-        @allowed_action.push(:create, :modify, :force_modify, :remove)
+        @allowed_actions.push(:create, :modify, :force_modify, :remove)
         @provider = Chef::Provider::Registry
       end
 
