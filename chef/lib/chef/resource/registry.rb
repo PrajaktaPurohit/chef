@@ -19,53 +19,55 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-
+require 'chef/provider/registry'
 require 'chef/resource'
-class Resource
-  class Registry < Chef::Resource
 
-    identity_attr :key_name
-    state_attrs :values, :type
+class Chef
+  class Resource
+    class Registry < Chef::Resource
 
-    def initialize(name, run_context=nil)
-      super
-      @resource_name = :registry
-      @path = name
-      @backup = 5
-      @action = :modify
-      @key_name = name
-      @allowed_action.push(:create, :modify, :force_modify, :remove)
-      @provider = Chef::Provider::Registry
-    end
+      identity_attr :key_name
+      state_attrs :values, :type
 
-    def key_name(arg=nil)
-      set_or_return(
-        :key_name,
-        arg,
-        :kind_of => String,
-        :name_attribute => true
-      )
-    end
-    def values(arg=nil)
-      set_or_return(
-        :values,
-        arg,
-        :kind_of => Hash
-      )
-    end
-    def type(arg=nil)
-      set_or_return(
-        :type,
-        arg,
-        :kind_of => Symbol,
-        :default => nil,
-        :equal_to => [:binary, :string, :multi_string, :expand_string, :dword, :dword_big_endian, :qword]
-      )
-    end
+      def initialize(name, run_context=nil)
+        super
+        @resource_name = :registry
+        @path = name
+        @backup = 5
+        @action = :modify
+        @key_name = name
+        @allowed_action.push(:create, :modify, :force_modify, :remove)
+        @provider = Chef::Provider::Registry
+      end
 
+      def key_name(arg=nil)
+        set_or_return(
+          :key_name,
+          arg,
+          :kind_of => String,
+          :name_attribute => true
+        )
+      end
+      def values(arg=nil)
+        set_or_return(
+          :values,
+          arg,
+          :kind_of => Hash
+        )
+      end
+      def type(arg=nil)
+        set_or_return(
+          :type,
+          arg,
+          :kind_of => Symbol,
+          :default => nil,
+          :equal_to => [:binary, :string, :multi_string, :expand_string, :dword, :dword_big_endian, :qword]
+        )
+      end
+
+    end
   end
 end
-
 #actions :create, :modify, :force_modify, :remove
 
 #attribute :key_name, :kind_of => String, :name_attribute => true
