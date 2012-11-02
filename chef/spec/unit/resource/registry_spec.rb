@@ -64,23 +64,6 @@ describe Chef::Resource::Registry do
     lambda { @resource.backup "blues" }.should raise_error(ArgumentError)
   end
 
-  it "should accept a sha256 for checksum" do
-    lambda { @resource.checksum "0fd012fdc96e96f8f7cf2046522a54aed0ce470224513e45da6bc1a17a4924aa" }.should_not raise_error(ArgumentError)
-    lambda { @resource.checksum "monkey!" }.should raise_error(ArgumentError)
-  end
-
-  it "should accept create, modify, force_modify or remove for action" do
-    lambda { @resource.action :create }.should_not raise_error(ArgumentError)
-    lambda { @resource.action :modify }.should_not raise_error(ArgumentError)
-    lambda { @resource.action :force_modify }.should_not raise_error(ArgumentError)
-    lambda { @resource.action :remove }.should_not raise_error(ArgumentError)
-    lambda { @resource.action :blues }.should raise_error(ArgumentError)
-  end
-
-  it "should use the object name as the path by default" do
-    @resource.path.should eql("reg_key")
-  end
-
 #  it "should accept a string as the path" do
 #    lambda { @resource.path "/tmp" }.should_not raise_error(ArgumentError)
 #    @resource.path.should eql("/tmp")

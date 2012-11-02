@@ -32,7 +32,6 @@ class Chef
       def initialize(name, run_context=nil)
         super
         @resource_name = :registry
-        @path = name
         @backup = 5
         @action = :modify
         @key_name = name
