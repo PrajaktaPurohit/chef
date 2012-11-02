@@ -28,7 +28,7 @@ describe Chef::Resource::Registry do
     events = Chef::EventDispatch::Dispatcher.new
     node = Chef::Node.new
     run_context = Chef::RunContext.new(node, {}, events)
-    resource = Chef::Resource::Registry.new(path, run_context)
+    resource = Chef::Resource::Registry.new("HKCU\Software\Test", run_context)
     resource
   end
 
@@ -40,7 +40,7 @@ describe Chef::Resource::Registry do
 
   context "when the registry value does not exist" do
     it "it creates the registry entry when the action is create" do
-      resource.key_name("HKCU\Software\Test")
+     # resource.key_name("HKCU\Software\Test")
       resource.values({'Apple' => ['Red', 'Sweet', 'Juicy']})
       resource.type(:multi_string)
       resource.run_action(:create)
