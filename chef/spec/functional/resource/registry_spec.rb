@@ -45,7 +45,7 @@ describe Chef::Resource::Registry do
       resource.values({'Apple' => ['Red', 'Sweet', 'Juicy']})
       resource.type(:multi_string)
       resource.run_action(:create)
-      Win32::Registry.get_value(resource.path, resource.value) == {'Apple' => ['Red', 'Sweet', 'Juicy']}
+      ::Win32::Registry.created?() == true#get_value(resource.path, resource.value) == {'Apple' => ['Red', 'Sweet', 'Juicy']}
     end
  #   it "modifys a key with value" do
  #     resource.run_action(:modify)
