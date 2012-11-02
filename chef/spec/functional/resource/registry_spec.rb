@@ -29,7 +29,7 @@ describe Chef::Resource::Registry do
     events = Chef::EventDispatch::Dispatcher.new
     node = Chef::Node.new
     run_context = Chef::RunContext.new(node, {}, events)
-    resource = Chef::Resource::Registry.new("HKCU\Software\Test", run_context)
+    resource = Chef::Resource::Registry.new("HKCU\Software\OpscodeTest", run_context)
     resource
   end
 
