@@ -50,7 +50,7 @@ describe Chef::Resource::Registry do
 
   it "should only accept symbol for type" do
     @resource.type :binary
-    @resource.type.should ba_a_kind_of(Hash)
+    @resource.type.should be_a_kind_of(Hash)
   end
 
 #  it "should accept a string as the path" do
