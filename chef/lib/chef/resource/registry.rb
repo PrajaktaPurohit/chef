@@ -24,6 +24,9 @@ require 'chef/resource'
 class Resource
   class Registry < Chef::Resource
 
+    identity_attr :key_name
+    state_attr :values, :type
+
     def initialize(name, run_context=nil)
       super
       @resource_name = :registry
