@@ -16,6 +16,7 @@
 # limitations under the License.
 #
 
+require 'chef/win32/registry'
 require 'spec_helper'
 
 describe Chef::Resource::Registry do
