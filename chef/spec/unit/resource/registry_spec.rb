@@ -29,7 +29,7 @@ describe Chef::Resource::Registry do
   end
 
   it "should have a default action of 'modify'" do
-    @resource.action.should eql(":modify")
+    @resource.action.should eql(:modify)
   end
 
 #  it "should have a default content of nil" do
@@ -50,7 +50,7 @@ describe Chef::Resource::Registry do
 
   it "should only accept symbol for type" do
     @resource.type :binary
-    @resource.type.should == ::Binary
+    @resource.type.should ba_a_kind_of(Hash)
   end
 
 #  it "should accept a string as the path" do
