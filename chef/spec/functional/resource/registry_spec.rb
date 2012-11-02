@@ -37,7 +37,7 @@ describe Chef::Resource::Registry do
     create_resource
   end
 
-  it_behaves_like "a registry resource"
+  #it_behaves_like "a registry resource"
 
   context "when the registry value does not exist" do
     it "it creates the registry entry when the action is create" do
