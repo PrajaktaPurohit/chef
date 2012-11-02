@@ -20,7 +20,7 @@ require 'chef/win32/registry'
 require 'spec_helper'
 
 describe Chef::Resource::Registry do
-  include_context Chef::Resource::Registry
+ # include_context Chef::Resource::Registry
 
   let(:file_base) { "file_spec" }
   #let(:expected_content) { "Don't fear the ruby." }
