@@ -45,8 +45,8 @@ class Chef
       def load_current_resource
         # Every child should be specifying their own constructor, so this
         # should only be run in the file case.
-        @current_resource ||= Chef::Resource::Registry.new(@new_resource.name)
-        if Chef::Win32::Registry.exist?(@new_resource.key_name)
+        @current_resource ||= Chef::Resource::Registry.new(@new_resource.key_name)
+        if Chef::Win32::Registry.get_value?(@new_resource.key_name, @new_resource.value)
             @current_resource.values(@new_resource.values)
             @current_resource.type(@new_resource.type)
         end
