@@ -29,16 +29,12 @@ describe Chef::Resource::Registry do
   end
 
   it "should have a default action of 'modify'" do
-    @resource.action.should eql("modify")
+    @resource.action.should eql(":modify")
   end
 
 #  it "should have a default content of nil" do
 #    @resource.content.should be_nil
 #  end
-
-  it "should be set to back up 5 reg keys by default" do
-    @resource.backup.should eql(5)
-  end
 
   it "should only accept strings for key_name" do
     lambda { @resource.key_name 5 }.should raise_error(ArgumentError)
@@ -53,15 +49,8 @@ describe Chef::Resource::Registry do
   end
 
   it "should only accept symbol for type" do
-    @resource.provider :binary
-    @resource.provider.should == ::Binary
-  end
-
-  it "should only accept false or a number for backup" do
-    lambda { @resource.backup true }.should raise_error(ArgumentError)
-    lambda { @resource.backup false }.should_not raise_error(ArgumentError)
-    lambda { @resource.backup 10 }.should_not raise_error(ArgumentError)
-    lambda { @resource.backup "blues" }.should raise_error(ArgumentError)
+    @resource.type :binary
+    @resource.type.should == ::Binary
   end
 
 #  it "should accept a string as the path" do
