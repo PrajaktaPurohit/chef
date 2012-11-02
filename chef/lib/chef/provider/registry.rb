@@ -46,7 +46,7 @@ class Chef
         # Every child should be specifying their own constructor, so this
         # should only be run in the file case.
         @current_resource ||= Chef::Resource::Registry.new(@new_resource.key_name)
-        if Chef::Win32::Registry.get_value?(@new_resource.key_name, @new_resource.value)
+        if Chef::Win32::Registry.get_value?(@new_resource.key_name, @new_resource.values)
             @current_resource.values(@new_resource.values)
             @current_resource.type(@new_resource.type)
         end
