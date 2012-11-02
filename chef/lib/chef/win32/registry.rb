@@ -29,8 +29,8 @@ end
 class Chef
   module ReservedNames::Win32
     class Registy
-      include Chef::ReservedNames::Win32::API::Registry
-      extend Chef::ReservedNames::Win32::API::Registry
+    #  include Chef::ReservedNames::Win32::API::Registry
+    #  extend Chef::ReservedNames::Win32::API::Registry
       #module Windows
       #  module RegistryHelper
 
