@@ -28,7 +28,7 @@ if RUBY_PLATFORM =~ /mswin|mingw32|windows/
 end
 class Chef
   module ReservedNames::Win32
-    class Registy
+    class Registry
     #  include Chef::ReservedNames::Win32::API::Registry
     #  extend Chef::ReservedNames::Win32::API::Registry
       #module Windows
