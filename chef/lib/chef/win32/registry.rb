@@ -21,6 +21,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+require 'chef/reserved_names'
 
 if RUBY_PLATFORM =~ /mswin|mingw32|windows/
   require 'win32/registry'
@@ -28,7 +29,7 @@ if RUBY_PLATFORM =~ /mswin|mingw32|windows/
 end
 class Chef
   module ReservedNames::Win32
-    module Registry
+    class Registry
     #  include Chef::ReservedNames::Win32::API::Registry
     #  extend Chef::ReservedNames::Win32::API::Registry
       #module Windows
