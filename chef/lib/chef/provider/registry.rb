@@ -50,7 +50,7 @@ class Chef
         path = @new_resource.key_name.split("\\")
         path.shift
         key = path.join("\\")
-        if Chef::Win32::Registry.key_exists?(key, true)
+        if Chef::Win32::Registry.key_exists?(@new_resource.key_name, true)
           if Chef::Win32::Registry.value_exists?(@new_resource.key_name, @new_resource.values)
             hive = Chef::Win32::Registry.get_hive(@new_resource.get_hive)
             hive.open(key, ::Win32::Registry::KEY_ALL_ACCESS) do |reg|
@@ -64,7 +64,7 @@ class Chef
       end
 
       def action_create
-        if Chef::Win32::Registry.key_exists?(key, true)
+        if Chef::Win32::Registry.key_exists?(@new_resource.key_name, true)
           if Chef::Win32::Registry.value_exists?(@new_resource.key_name, @new_resource.values)
             registry_update(:modify)
           end

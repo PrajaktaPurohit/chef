@@ -66,8 +66,6 @@ class Chef
           "HKEY_USERS" => ::Win32::Registry::HKEY_USERS,
           "HKEY_CURRENT_USER" => ::Win32::Registry::HKEY_CURRENT_USER
         }[hkey]
-        puts "**path: #{path}"
-        puts "**hive: #{hive}"
 
         unless hive
           Chef::Application.fatal!("Unsupported registry hive '#{hive_name}'")
@@ -209,7 +207,7 @@ class Chef
 
       end
 
-      def create_key(path)
+      def self.create_key(path)
         hive, reg_path, hive_name, root_key, hive_loaded = get_reg_path_info(path)
         key = reg_path.join("\\")
         Chef::Log.debug("Creating registry key #{path}")
