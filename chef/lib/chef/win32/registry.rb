@@ -28,7 +28,7 @@ if RUBY_PLATFORM =~ /mswin|mingw32|windows/
   require 'ruby-wmi'
 end
 class Chef
-  module ReservedNames::Win32
+  class Win32
     class Registry
     #  include Chef::ReservedNames::Win32::API::Registry
     #  extend Chef::ReservedNames::Win32::API::Registry
@@ -37,7 +37,7 @@ class Chef
 
       @@native_registry_constant = ENV['PROCESSOR_ARCHITEW6432'] == 'AMD64' ? 0x0100 : 0x0200
 
-      def get_hive_name(path)
+      def self.get_hive_name(path)
         Chef::Log.debug("Resolving registry shortcuts to full names")
 
         reg_path = path.split("\\")
@@ -53,7 +53,7 @@ class Chef
         return hkey
       end
 
-      def get_hive(path)
+      def self.get_hive(path)
 
         Chef::Log.debug("Getting hive for #{path}")
         reg_path = path.split("\\")
@@ -66,6 +66,8 @@ class Chef
           "HKEY_USERS" => ::Win32::Registry::HKEY_USERS,
           "HKEY_CURRENT_USER" => ::Win32::Registry::HKEY_CURRENT_USER
         }[hkey]
+        puts "**path: #{path}"
+        puts "**hive: #{hive}"
 
         unless hive
           Chef::Application.fatal!("Unsupported registry hive '#{hive_name}'")
@@ -88,10 +90,26 @@ class Chef
         end
       end
 
-      def set_value(mode,path,values,type=nil)
+      def self.set_value(mode,path,values,type=nil)
         hive, reg_path, hive_name, root_key, hive_loaded = get_reg_path_info(path)
         key_name = reg_path.join("\\")
 
+        puts "hive: #{hive}"
+        puts"-----------"
+        puts "reg_path: #{reg_path}"
+        puts"-----------"
+        puts "hive_name: #{hive_name}"
+        puts"-----------"
+        puts "root_key: #{root_key}"
+        puts"-----------"
+        puts "hive_loaded: #{hive_loaded}"
+        puts "----------"
+        puts "values: #{values}"
+        puts "----------"
+        puts "key_name:(reg_path.join) #{key_name}"
+        puts "----------"
+        puts "path: #{path}"
+        
         Chef::Log.debug("Creating #{path}")
 
         if !key_exists?(path,true)
@@ -125,6 +143,7 @@ class Chef
                 :qword => ::Win32::Registry::REG_QWORD
               }[type]
 
+              puts "reg: #{reg} key: #{key} reg_type: #{reg_type} val: #{val}"
               reg.write(key, reg_type, val)
 
               ensure_hive_unloaded(hive_loaded)
@@ -137,12 +156,13 @@ class Chef
         return false
       end
 
-      def get_value(path,value)
+      def self.get_value(path,value)
         hive, reg_path, hive_name, root_key, hive_loaded = get_reg_path_info(path)
         key = reg_path.join("\\")
 
         hive.open(key, ::Win32::Registry::KEY_ALL_ACCESS | @@native_registry_constant) do | reg |
           begin
+            puts reg[value]
             return reg[value]
         rescue
           return nil
@@ -155,6 +175,7 @@ class Chef
       def get_values(path)
         hive, reg_path, hive_name, root_key, hive_loaded = get_reg_path_info(path)
         key = reg_path.join("\\")
+
         hive.open(key, ::Win32::Registry::KEY_ALL_ACCESS | @@native_registry_constant) do | reg |
           values = []
         begin
@@ -169,7 +190,7 @@ class Chef
         end
       end
 
-      def delete_value(path,values)
+      def self.delete_value(path,values)
         hive, reg_path, hive_name, root_key, hive_loaded = get_reg_path_info(path)
         key = reg_path.join("\\")
         Chef::Log.debug("Deleting values in #{path}")
@@ -195,7 +216,7 @@ class Chef
         hive.create(key)
       end
 
-      def value_exists?(path,value)
+      def self.value_exists?(path,value)
         if key_exists?(path,true)
 
           hive, reg_path, hive_name, root_key , hive_loaded = get_reg_path_info(path)
@@ -221,7 +242,7 @@ class Chef
       end
 
       # TODO: Does not load user registry...
-      def key_exists?(path, load_hive = false)
+      def self.key_exists?(path, load_hive = false)
         if load_hive
           hive, reg_path, hive_name, root_key , hive_loaded = get_reg_path_info(path)
           key = reg_path.join("\\")
@@ -255,12 +276,15 @@ class Chef
 
       end
 
-      def resolve_user_to_sid(username)
+      def self.resolve_user_to_sid(username)
         begin
+          puts "uname #{username}"
           sid = WMI::Win32_UserAccount.find(:first, :conditions => {:name => username}).sid
+          puts "sig ::::::::: #{sid}"
           Chef::Log.debug("Resolved user SID to #{sid}")
           return sid
         rescue
+          puts "returning nil"
           return nil
         end
       end
@@ -278,7 +302,7 @@ class Chef
         end
       end
 
-      def is_user_hive?(hive)
+      def self.is_user_hive?(hive)
         if hive == ::Win32::Registry::HKEY_USERS
           return true
         else
@@ -286,7 +310,7 @@ class Chef
         end
       end
 
-      def get_reg_path_info(path)
+      def self.get_reg_path_info(path)
         hive = get_hive(path)
         reg_path = path.split("\\")
         hive_name = reg_path.shift
@@ -302,7 +326,7 @@ class Chef
         return hive, reg_path, hive_name, root_key, hive_loaded
       end
 
-      def load_user_hive(hive,reg_path,user_hive)
+      def self.load_user_hive(hive,reg_path,user_hive)
         Chef::Log.debug("Reg Path #{reg_path}")
         # See if the hive is loaded. Logged in users will have a key that is named their SID
         # if the user has specified the a path by SID and the user is logged in, this function
@@ -310,6 +334,7 @@ class Chef
         if is_user_hive?(hive) && !key_exists?("HKU\\#{user_hive}")
           Chef::Log.debug("The user is not logged in and has not been specified by SID")
           sid = resolve_user_to_sid(user_hive)
+          puts "sid ***** #{sid} *************"
           Chef::Log.debug("User SID resolved to (#{sid})")
           # Now that the user has been resolved to a SID, check and see if the hive exists.
           # If this exists by SID, the user is logged in and we should use that key.
@@ -317,9 +342,11 @@ class Chef
           # does not exist as the key location.
           load_reg = false
           if key_exists?("HKU\\#{sid}")
+            puts "in if"
             reg_path[0] = sid #use the active profile (user is logged on)
             Chef::Log.debug("HKEY_USERS Mapped: #{user_hive} -> #{sid}")
           else
+            puts "in else"
             Chef::Log.debug("User is not logged in")
             load_reg = true
           end
@@ -347,7 +374,7 @@ class Chef
       end
 
       private
-      def ensure_hive_unloaded(hive_loaded=false)
+      def self.ensure_hive_unloaded(hive_loaded=false)
         if(hive_loaded)
           Chef::Log.debug("Hive was loaded, we really should unload it")
           unload_hive(path)
